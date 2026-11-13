@@ -1,0 +1,12 @@
+/index.php / 301
+/about/ /about 301
+/services/ /services 301
+/contact/ /contact 301
+/category/latest-job /testimonials 301
+/category/latest-job/ /testimonials 301
+/testimonial-from-joubere-ltd-kevin-cahil-supply-chain-manger/* /testimonials 301
+/testimonial-from-trevor-cook-addo-food-group-supply-chain-manager/* /testimonials 301
+/feed / 301
+/feed/ / 301
+/wp-content/* / 301
+/home / 301

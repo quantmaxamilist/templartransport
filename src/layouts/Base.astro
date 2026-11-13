@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, areas, testimonials } from '../data/site';
+interface Props { title: string; description: string; schema?: object[]; noindex?: boolean }
+const { title, description, schema = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/(.)\/$/, '$1'), site.url).href;
+const business = {
+  '@context': 'https://schema.org',
+  '@type': ['MovingCompany', 'LocalBusiness'],
+  '@id': `${site.url}/#business`,
+  name: site.name,
+  alternateName: site.short,
+  slogan: site.strap,
+  description: 'Established since 1980, Templar Transport Ltd provides temperature controlled distribution throughout the UK — chilled and frozen goods, vehicles from van to articulated lorry.',
+  url: site.url,
+  telephone: '+441747824436',
+  email: site.email,
+  foundingDate: '1980',
+  image: `${site.url}/img/fleet-lineup.jpg`,
+  logo: `${site.url}/img/logo.png`,
+  address: { '@type': 'PostalAddress', streetAddress: 'Riversmeet, High Street', addressLocality: 'Gillingham', addressRegion: 'Dorset', postalCode: 'SP8 4AA', addressCountry: 'GB' },
+  areaServed: [{ '@type': 'Country', name: 'United Kingdom' }, ...areas.map((a) => ({ '@type': 'Place', name: `${a.name}, ${a.county}` }))],
+  sameAs: [site.google.url],
+  knowsAbout: ['Temperature controlled distribution', 'Chilled transport', 'Frozen transport', 'Refrigerated haulage'],
+  review: testimonials.map((t) => ({ '@type': 'Review', author: { '@type': 'Person', name: t.name }, reviewBody: t.quote })),
+};
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#132059" />
+    <meta name="geo.region" content="GB-DOR" />
+    <meta name="geo.placename" content="Gillingham, Dorset" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${site.url}/og.jpg`} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <script type="application/ld+json" set:html={JSON.stringify([business, ...schema])} />
+  </head>
+  <body>
+    <a class="sr-only" href="#main">Skip to content</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span></div>
+    <div class="curtain" aria-hidden="true"></div>
+    <script src="../scripts/main.ts"></script>
+  </body>
+</html>

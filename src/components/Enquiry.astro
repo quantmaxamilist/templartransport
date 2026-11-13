@@ -1,0 +1,79 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+interface Props { title?: string; text?: string; place?: string }
+const { title = 'Get a quote', text = 'So whether a one off job or regular contract we will be happy to help.', place } = Astro.props;
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY || '';
+const needs = ['Chilled goods', 'Frozen goods', 'One-off job', 'Regular contract', 'Van', 'Rigid lorry', 'Articulated lorry'];
+---
+<section class="section eq redband" id="quote">
+  <div class="container eq__in">
+    <div class="eq__copy">
+      <p class="label eq__lab">Call us today</p>
+      <h2 data-reveal>{title}</h2>
+      <p class="eq__p" data-reveal>{text}</p>
+      <a class="tel eq__big" href={site.phoneHref} data-reveal><Icon name="phone" />{site.phone}</a>
+      <p class="eq__mob" data-reveal>{site.mobiles.map((m, i) => <>{i > 0 && ' · '}<a href={m.href}>{m.label}</a></>)}</p>
+      <a class="eq__mail" href={`mailto:${site.email}`} data-reveal>{site.email}</a>
+    </div>
+    <form class="form eq__form" data-form action="https://api.web3forms.com/submit" method="POST" data-reveal>
+      <input type="hidden" name="access_key" value={key} />
+      <input type="hidden" name="subject" value="New enquiry — Templar Transport website" />
+      <input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div class="form__row">
+        <div class="field"><label for="q-name">Name</label><input id="q-name" name="name" autocomplete="name" required /></div>
+        <div class="field"><label for="q-co">Company</label><input id="q-co" name="company" autocomplete="organization" /></div>
+      </div>
+      <div class="form__row">
+        <div class="field"><label for="q-phone">Phone</label><input id="q-phone" name="phone" type="tel" autocomplete="tel" required /></div>
+        <div class="field"><label for="q-email">Email</label><input id="q-email" name="email" type="email" autocomplete="email" required /></div>
+      </div>
+      <fieldset class="eq__need"><legend>What do you need?</legend>
+        <div class="chips">{needs.map((n) => <label class="chip"><input type="checkbox" name="needs" value={n} data-need={n.toLowerCase().replace(/\W+/g, '-')} /> {n}</label>)}</div>
+      </fieldset>
+      <div class="form__row">
+        <div class="field"><label for="q-from">Collection from</label><input id="q-from" name="collection" value={place ?? ''} /></div>
+        <div class="field"><label for="q-to">Delivery to</label><input id="q-to" name="delivery" /></div>
+      </div>
+      <div class="field"><label for="q-msg">Details</label><textarea id="q-msg" name="message" required placeholder="Goods, pallets, dates and any temperature requirements."></textarea></div>
+      <button class="btn btn--navy eq__btn" type="submit">Send enquiry <Icon name="arrow" /></button>
+      <p class="eq__legal">By sending this form you agree to our <a href="/privacy">Privacy Policy</a>.</p>
+      <p class="eq__status" role="status" aria-live="polite" data-form-status></p>
+    </form>
+  </div>
+</section>
+<style>
+  .eq__in { display: grid; gap: clamp(2rem, 5vw, 4.5rem); }
+  @media (min-width: 980px) { .eq__in { grid-template-columns: .85fr 1.15fr; align-items: start; } .eq__copy { position: sticky; top: calc(var(--hdr-h) + 2rem); } }
+  .eq__copy { display: grid; gap: 1rem; justify-items: start; }
+  .eq__lab, .eq .label { color: #fff; }
+  .eq__p { font-size: 1.15rem; max-width: 40ch; }
+  .eq__big { font-size: clamp(2rem, 4vw, 3.2rem); }
+  .eq__mob a, .eq__mail { color: #fff; font-weight: 600; }
+  .eq__form { background: rgba(0, 0, 0, .14); border-radius: var(--radius); padding: clamp(1.2rem, 3vw, 2.2rem); }
+  .eq__need { border: 0; margin: 0; padding: 0; display: grid; gap: .6rem; }
+  .eq__need .chip { cursor: pointer; font-size: .88rem; border-color: transparent; }
+  .eq__need .chip:has(input:checked) { background: var(--navy); color: #fff; }
+  .eq__btn { width: 100%; justify-content: center; }
+  .eq__legal { font-size: .88rem; }
+  .eq__legal a { color: #fff; }
+  .eq__status { font-weight: 600; }
+</style>
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((f) => {
+    const q = new URLSearchParams(location.search).get('need');
+    if (q) f.querySelectorAll<HTMLInputElement>('[data-need]').forEach((c) => { if (c.dataset.need === q) c.checked = true; });
+    const st = f.querySelector<HTMLElement>('[data-form-status]')!;
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const key = f.querySelector<HTMLInputElement>('[name=access_key]')!.value;
+      if (!key) { st.textContent = 'The form isn’t connected yet — please call 01747 824436.'; return; }
+      const fd = new FormData(f); fd.set('needs', fd.getAll('needs').join(', '));
+      st.textContent = 'Sending…';
+      try {
+        const j = await (await fetch(f.action, { method: 'POST', body: fd, headers: { Accept: 'application/json' } })).json();
+        if (j.success) { f.reset(); st.textContent = 'Thanks — your enquiry is with us. We’ll be in touch shortly.'; } else st.textContent = 'Sorry, something went wrong. Please call 01747 824436.';
+      } catch { st.textContent = 'Sorry, something went wrong. Please call 01747 824436.'; }
+    });
+  });
+</script>

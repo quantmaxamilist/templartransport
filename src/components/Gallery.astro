@@ -1,0 +1,11 @@
+---
+interface Props { items: { src: string; w: number; h: number; alt: string }[] }
+const { items } = Astro.props;
+---
+<ul class="gal">
+  {items.map((p) => <li class="ph" data-reveal><img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" /></li>)}
+</ul>
+<style>
+  .gal { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .gal li { aspect-ratio: 3 / 2; }
+</style>

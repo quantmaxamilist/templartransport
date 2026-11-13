@@ -1,0 +1,54 @@
+---
+import Icon from './Icon.astro';
+import { testimonials, googleReviews, site } from '../data/site';
+interface Props { full?: boolean }
+---
+<section class="section ice tm" id="testimonials">
+  <div class="container">
+    <div class="tm__head">
+      <div><p class="label" data-reveal>Testimonials</p><h2 data-reveal>Trusted by the <em>food industry</em></h2></div>
+      <a class="tm__g" href={site.google.url} target="_blank" rel="noopener" data-reveal>
+        <Icon name="google" /><span><b>{site.google.score}</b> <span class="stars" aria-hidden="true"><Icon name="star" /><Icon name="star" /><Icon name="star" /><Icon name="star" /><Icon name="star" /></span><small>{site.google.count} Google reviews</small></span>
+      </a>
+    </div>
+    <div class="tm__grid">
+      {testimonials.map((t) => (
+        <figure class="tm__card" id={t.slug} data-reveal>
+          <img class="tm__logo" src={t.logo} alt={t.company} loading="lazy" />
+          <blockquote><p>‘{t.quote}’</p></blockquote>
+          <figcaption><b>{t.name}</b> · {t.role}, {t.company}</figcaption>
+        </figure>
+      ))}
+      {googleReviews.map((r) => (
+        <figure class="tm__card tm__card--g" data-reveal>
+          <span class="stars" aria-label={`${r.stars} out of 5`}>{Array.from({ length: r.stars }).map(() => <Icon name="star" />)}</span>
+          <blockquote><p>{r.text}</p></blockquote>
+          <figcaption><b>{r.name}</b> · Google review · {r.when}</figcaption>
+        </figure>
+      ))}
+    </div>
+    <div class="tm__cta" data-reveal>
+      <a class="btn btn--navy" href={site.google.url} target="_blank" rel="noopener"><Icon name="google" /> Read &amp; leave a Google review</a>
+    </div>
+  </div>
+</section>
+<style>
+  .tm__head { display: grid; gap: 1.5rem; align-items: end; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  @media (min-width: 900px) { .tm__head { grid-template-columns: 1fr auto; } }
+  .tm__head h2 { margin-top: .8rem; max-width: 16ch; }
+  .tm__g { display: flex; gap: .8rem; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: var(--radius); padding: 1rem 1.2rem; text-decoration: none; }
+  .tm__g > :global(svg) { width: 32px; height: 32px; }
+  .tm__g b { font-family: var(--f-display); font-size: 2rem; font-style: italic; line-height: 1; }
+  .tm__g small { display: block; color: var(--muted); font-size: .8rem; }
+  .stars { display: inline-flex; gap: 2px; color: #f6b400; }
+  .stars :global(svg) { width: 16px; height: 16px; }
+  .tm__grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+  .tm__card { margin: 0; background: #fff; border-radius: var(--radius); padding: clamp(1.4rem, 3vw, 2.2rem); display: flex; flex-direction: column; gap: 1rem; border-top: 4px solid var(--red); }
+  .tm__card--g { border-top-color: var(--navy); }
+  .tm__logo { height: 56px; width: auto; align-self: flex-start; border-radius: 4px; }
+  .tm__card blockquote { margin: 0; flex: 1; }
+  .tm__card blockquote p { font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.5; }
+  .tm__card figcaption { font-size: .92rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: .8rem; }
+  .tm__card figcaption b { color: var(--ink); }
+  .tm__cta { margin-top: 2rem; }
+</style>

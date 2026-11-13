@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import InnerHero from '../components/InnerHero.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Enquiry from '../components/Enquiry.astro';
+---
+<Base title="Testimonials – Templar Transport" description="What food manufacturers and supply chain managers say about Templar Transport's temperature controlled distribution — plus our Google reviews.">
+  <InnerHero label="Testimonials" title="Testimonials" sub="A reliable, first class service — in our customers' own words." crumbs={[{ href: '/testimonials', label: 'Testimonials' }]} />
+  <Testimonials />
+  <Enquiry />
+</Base>

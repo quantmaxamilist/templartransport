@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import InnerHero from '../components/InnerHero.astro';
+import Icon from '../components/Icon.astro';
+import Enquiry from '../components/Enquiry.astro';
+import { contact, site } from '../data/site';
+const schema = [{ '@context': 'https://schema.org', '@type': 'ContactPage', url: `${site.url}/contact`, about: { '@id': `${site.url}/#business` } }];
+---
+<Base title={contact.title} description={contact.description} schema={schema}>
+  <InnerHero label="Contact" title="Contact" sub="Call us today, email, or send the form below." crumbs={[{ href: '/contact', label: 'Contact' }]} />
+  <section class="section--tight light">
+    <div class="container ct">
+      <div class="ct__card" data-reveal><p class="label">Telephone</p><a class="tel ct__big" href={site.phoneHref}><Icon name="phone" />{site.phone}</a>{site.mobiles.map((m) => <a class="tel ct__mid" href={m.href}>{m.label}</a>)}</div>
+      <div class="ct__card" data-reveal><p class="label">Email</p><a class="ct__mail" href={`mailto:${site.email}`}>{site.email}</a></div>
+      <div class="ct__card" data-reveal><p class="label">Address</p><address>{site.address.lines.map((l) => <>{l}<br /></>)}{site.address.postcode}</address></div>
+    </div>
+  </section>
+  <Enquiry title="Send an enquiry" />
+</Base>
+<style>
+  .ct { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+  .ct__card { border: 1.5px solid var(--line); border-top: 4px solid var(--red); border-radius: var(--radius); padding: 1.6rem; display: grid; gap: .5rem; align-content: start; }
+  .ct__big { font-size: 1.8rem; color: var(--navy); }
+  .ct__big :global(svg) { color: var(--red); }
+  .ct__mid { font-size: 1.25rem; color: var(--navy); }
+  .ct__mail { font-weight: 700; color: var(--navy); font-size: 1.15rem; word-break: break-all; }
+  address { font-style: normal; line-height: 1.6; }
+</style>

@@ -1,0 +1,89 @@
+---
+/**
+ * Signature moment: the Templar "T" emblem from the logo is a window onto their fleet.
+ * On first visit it flies past the camera into the full-screen hero (≈2.4s). Any click,
+ * key, wheel or touch skips it. Once per session. Never for reduced-motion.
+ */
+import Icon from './Icon.astro';
+import { site, home } from '../data/site';
+---
+<div class="intro" data-intro aria-hidden="true" hidden>
+  <svg class="intro__svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <mask id="tmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1000">
+        <rect width="1600" height="1000" fill="#fff" />
+        <g data-intro-t transform="translate(800 500) scale(1)"><path d="M-230 -240 H230 V-120 H200 L180 -180 H50 V190 L110 210 V240 H-110 V210 L-50 190 V-180 H-180 L-200 -120 H-230 Z" fill="#000" /></g>
+      </mask>
+    </defs>
+    <rect width="1600" height="1000" fill="#132059" mask="url(#tmask)" />
+    <g data-intro-ring transform="translate(800 500)"><path d="M-230 -240 H230 V-120 H200 L180 -180 H50 V190 L110 210 V240 H-110 V210 L-50 190 V-180 H-180 L-200 -120 H-230 Z" fill="none" stroke="#bd190e" stroke-width="8" vector-effect="non-scaling-stroke" /></g>
+  </svg>
+  <p class="intro__cap">Temperature Controlled Distribution <span>❄</span></p>
+</div>
+
+<section class="hero stage" aria-label="Introduction">
+  <div class="hero__bg"><img src="/img/fleet-lineup.webp" srcset="/img/fleet-lineup-sm.webp 900w, /img/fleet-lineup.webp 2000w" sizes="100vw" width="2000" height="1500" alt="The Templar Transport fleet of temperature controlled lorries lined up" fetchpriority="high" /></div>
+  <div class="hero__shade"></div>
+  <div class="container hero__in">
+    <p class="label hero__k">{site.strap}</p>
+    <h1 class="hero__h1"><span class="hero__w">Welcome to</span> Templar Transport Ltd</h1>
+    <p class="hero__p">{home.welcome}</p>
+    <div class="hero__cta">
+      <a class="btn" href="/contact">Get a quote <Icon name="arrow" /></a>
+      <a class="btn btn--line" href={site.phoneHref}><Icon name="phone" /> {site.phone}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro { position: fixed; inset: 0; z-index: var(--z-intro); pointer-events: auto; cursor: pointer; }
+  .intro[hidden] { display: none; }
+  .intro__svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .intro__cap { position: absolute; left: 0; right: 0; bottom: 12vh; text-align: center; color: #fff; font-family: var(--f-mono); font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; }
+  .intro__cap span { color: #b9cdea; }
+  .hero { position: relative; min-height: min(92svh, 900px); display: grid; align-items: end; overflow: hidden; }
+  .hero__bg, .hero__shade { position: absolute; inset: 0; }
+  .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
+  .hero__shade { background: linear-gradient(90deg, rgba(7, 12, 36, .9) 0%, rgba(7, 12, 36, .6) 42%, rgba(7, 12, 36, .05) 75%), linear-gradient(0deg, rgba(7, 12, 36, .85) 0%, rgba(7, 12, 36, 0) 45%); }
+  .hero__in { position: relative; padding-block: 8rem clamp(3.5rem, 8vh, 6rem); display: grid; gap: 1.2rem; justify-items: start; }
+  .hero__h1 { max-width: 14ch; display: grid; }
+  .hero__w { font-size: .42em; font-style: italic; color: #b9cdea; letter-spacing: .02em; }
+  .hero__p { max-width: 52ch; font-size: clamp(1.05rem, 1.3vw, 1.2rem); color: rgba(255, 255, 255, .9); }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: .4rem; }
+  @media (max-width: 640px) {
+    .hero__shade { background: linear-gradient(0deg, rgba(7, 12, 36, .96) 0%, rgba(7, 12, 36, .7) 55%, rgba(7, 12, 36, .2) 100%); }
+    .hero__cta .btn { flex: 1 1 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  const intro = document.querySelector<HTMLElement>('[data-intro]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let seen = false;
+  try { seen = sessionStorage.getItem('tt-intro') === '1'; } catch {}
+  const items = document.querySelectorAll<HTMLElement>('.hero__in > *');
+  if (intro && !reduce && !seen) {
+    try { sessionStorage.setItem('tt-intro', '1'); } catch {}
+    intro.hidden = false;
+    const t = intro.querySelector('[data-intro-t]')!;
+    const ring = intro.querySelector('[data-intro-ring]')!;
+    const cap = intro.querySelector('.intro__cap')!;
+    gsap.set(items, { autoAlpha: 0, y: 24 });
+    const s = { k: 0.32 };
+    const apply = () => { const v = `translate(800 500) scale(${s.k})`; t.setAttribute('transform', v); ring.setAttribute('transform', v); };
+    apply();
+    const tl = gsap.timeline({ onComplete: done });
+    tl.from(cap, { autoAlpha: 0, y: 10, duration: .4 }, 0)
+      .to(s, { k: .6, duration: .55, ease: 'power3.out', onUpdate: apply }, 0)
+      .to(s, { k: 16, duration: 1.25, ease: 'power3.in', onUpdate: apply }, .85)
+      .to(cap, { autoAlpha: 0, duration: .3 }, .85)
+      .to(ring, { opacity: 0, duration: .4 }, 1.4)
+      .to(intro, { autoAlpha: 0, duration: .25 }, 1.95);
+    function done() { intro!.hidden = true; gsap.to(items, { autoAlpha: 1, y: 0, duration: .7, stagger: .07, ease: 'power3.out' }); off(); }
+    const skip = () => { tl.progress(1); };
+    const evs = ['click', 'keydown', 'wheel', 'touchstart'] as const;
+    function off() { evs.forEach((e) => removeEventListener(e, skip)); }
+    evs.forEach((e) => addEventListener(e, skip, { passive: true }));
+  }
+</script>

@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+import { site, nav, areas, facts } from '../data/site';
+const y = new Date().getFullYear();
+---
+<footer class="ft stage frostbg">
+  <div class="container ft__top">
+    <div class="ft__brand">
+      <span class="ft__plate"><img src="/img/logo.png" alt="Templar Transport Ltd" width="914" height="84" loading="lazy" /></span>
+      <p class="muted">{facts[1]}. Temperature controlled distribution throughout the UK.</p>
+    </div>
+    <div>
+      <p class="label">Call us today</p>
+      <a class="tel ft__big" href={site.phoneHref}><Icon name="phone" />{site.phone}</a>
+      {site.mobiles.map((m) => <a class="tel ft__mid" href={m.href}>{m.label}</a>)}
+      <a class="ft__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      <address>{site.address.lines.slice(1).join(', ')}, {site.address.postcode}</address>
+    </div>
+    <div>
+      <p class="label">Explore</p>
+      <ul class="ft__list">{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/privacy">Privacy</a></li></ul>
+    </div>
+    <div>
+      <p class="label">Areas</p>
+      <ul class="ft__list ft__areas">{areas.map((a) => <li><a href={`/areas/${a.slug}`}>{a.name}</a></li>)}</ul>
+    </div>
+  </div>
+  <div class="container ft__bot">
+    <p>© {y} {site.name}. Gillingham, Dorset.</p>
+    <p><a href="/privacy">Privacy</a> · <a href="/sitemap.xml">Sitemap</a></p>
+  </div>
+</footer>
+<style>
+  .ft { padding-top: clamp(64px, 8vw, 110px); }
+  .ft__top { display: grid; gap: 2.4rem; padding-bottom: 3rem; }
+  @media (min-width: 760px) { .ft__top { grid-template-columns: 1.3fr 1fr; } }
+  @media (min-width: 1100px) { .ft__top { grid-template-columns: 1.4fr 1fr .7fr 1.2fr; } }
+  .ft__plate { display: inline-block; background: #fff; padding: .9rem 1.1rem; border-radius: var(--radius); }
+  .ft__plate img { width: 260px; height: auto; }
+  .ft__brand p { margin-top: 1.2rem; max-width: 36ch; }
+  .ft .label { margin-bottom: 1rem; display: flex; }
+  .ft__big { font-size: 1.7rem; display: flex; }
+  .ft__big :global(svg) { color: #ff4a3d; }
+  .ft__mid { display: flex; font-size: 1.15rem; margin-top: .3rem; }
+  .ft__mail { display: block; margin-top: .8rem; color: var(--muted-d); }
+  address { font-style: normal; color: var(--muted-d); margin-top: .5rem; font-size: .95rem; }
+  .ft__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+  .ft__list a, .ft__mail { text-decoration: none; color: var(--muted-d); }
+  .ft__list a:hover, .ft__mail:hover { color: #fff; }
+  .ft__areas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem 1rem; }
+  .ft__bot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.4rem; border-top: 1px solid var(--line-d); font-size: .88rem; color: var(--muted-d); }
+  .ft__bot a { color: #fff; }
+</style>

@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import Icon from '../../components/Icon.astro';
+import Enquiry from '../../components/Enquiry.astro';
+import { areas, site } from '../../data/site';
+const counties = [...new Set(areas.map((a) => a.county))];
+---
+<Base title="Areas We Cover | Templar Transport" description="Temperature controlled distribution throughout the UK from Gillingham, Dorset — chilled and frozen transport across Dorset, Somerset, Wiltshire and beyond.">
+  <InnerHero label="Coverage" title="Areas we cover" sub={`Based in ${site.address.town}, ${site.address.county} — temperature controlled distribution throughout the UK.`} crumbs={[{ href: '/areas', label: 'Areas' }]} />
+  <section class="section light">
+    <div class="container ar">
+      {counties.map((c) => (
+        <div data-reveal><p class="label">{c}</p>
+          <ul class="ar__ul">{areas.filter((a) => a.county === c).map((a) => <li><a href={`/areas/${a.slug}`}><span>{a.name}</span><Icon name="arrow" /></a></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+  <Enquiry />
+</Base>
+<style>
+  .ar { display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+  .ar__ul { list-style: none; margin: 1rem 0 0; padding: 0; }
+  .ar__ul a { display: flex; justify-content: space-between; align-items: center; padding: .85rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .ar__ul span { font-family: var(--f-display); font-weight: 700; font-style: italic; font-size: 1.3rem; text-transform: uppercase; color: var(--navy); }
+  .ar__ul :global(svg) { width: 18px; height: 18px; color: var(--red); transition: transform .3s var(--ease-out); }
+  .ar__ul a:hover :global(svg) { transform: translateX(4px); }
+</style>

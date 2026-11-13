@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import InnerHero from '../components/InnerHero.astro';
+import Icon from '../components/Icon.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Enquiry from '../components/Enquiry.astro';
+import { servicesPage, services, home, site } from '../data/site';
+const icons = ['drop', 'snow', 'van', 'calendar'];
+const need = ['chilled-goods', 'frozen-goods', 'articulated-lorry', 'regular-contract'];
+const schema = services.map((s) => ({ '@context': 'https://schema.org', '@type': 'Service', name: s.h, description: s.p, provider: { '@id': `${site.url}/#business` }, areaServed: 'United Kingdom' }));
+---
+<Base title={servicesPage.title} description={servicesPage.description} schema={schema}>
+  <InnerHero label="Services" title="Services" sub={home.welcome} crumbs={[{ href: '/services', label: 'Services' }]} />
+  <section class="section light">
+    <div class="container sv">
+      {services.map((s, i) => (
+        <article class="sv__row" id={s.slug} data-reveal>
+          <div class="sv__img navy frostbg" aria-hidden="true"><Icon name={icons[i]} /><span>{s.n}</span></div>
+          <div class="sv__txt">
+            <h2>{s.h}</h2>
+            <p class="lead">{s.p}</p>
+            <a class="btn btn--navy" href={`/contact?need=${need[i]}#quote`}>Get a quote <Icon name="arrow" /></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+  <Testimonials />
+  <Enquiry />
+</Base>
+<style>
+  .sv { display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+  .sv__row { display: grid; gap: 1.4rem; padding-bottom: clamp(2.5rem, 5vw, 4rem); border-bottom: 1px solid var(--line); scroll-margin-top: calc(var(--hdr-h) + 20px); }
+  .sv__row:last-child { border-bottom: 0; padding-bottom: 0; }
+  @media (min-width: 960px) { .sv__row { grid-template-columns: 1fr 1fr; align-items: center; } .sv__row:nth-child(even) .sv__img { order: 2; } }
+  .sv__img { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); display: grid; place-items: center; overflow: hidden; }
+  .sv__img :global(svg) { width: 34%; height: auto; color: #fff; stroke-width: 1.2; }
+  .sv__img span { position: absolute; right: 1.2rem; bottom: .4rem; font-family: var(--f-display); font-weight: 800; font-style: italic; font-size: 5rem; line-height: 1; color: var(--red); }
+  .sv__txt { display: grid; gap: 1rem; justify-items: start; }
+  .sv__n { font-family: var(--f-display); font-weight: 800; font-style: italic; font-size: 3rem; color: var(--red); line-height: 1; }
+  .sv__txt h2 { font-size: var(--fs-display-3); }
+</style>

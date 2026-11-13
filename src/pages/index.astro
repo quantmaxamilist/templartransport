@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Enquiry from '../components/Enquiry.astro';
+import { home, about, facts, services, areas, site } from '../data/site';
+const big = ['30+', '1980', 'Small team'];
+---
+<Base title={home.title} description={home.description}>
+  <Hero />
+
+  <section class="facts navy frostbg" aria-label="About Templar at a glance">
+    <ul class="container facts__in">
+      {facts.map((f, i) => <li data-reveal><b>{big[i]}</b><span>{f}</span></li>)}
+    </ul>
+  </section>
+
+  <section class="section light svc" id="services">
+    <div class="container">
+      <div class="sh">
+        <div><p class="label" data-reveal>What we do</p><h2 data-reveal>Temperature controlled <em>distribution</em></h2></div>
+        <p class="lead muted" data-reveal>{about.p1.split('. ')[0]}.</p>
+      </div>
+      <ol class="svc__grid">
+        {services.map((s) => (
+          <li data-reveal><a href={`/services#${s.slug}`}>
+            <span class="svc__n">{s.n}</span><h3>{s.h}</h3><p class="muted">{s.p}</p><span class="svc__go">Find out more <Icon name="arrow" /></span>
+          </a></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="fleet stage">
+    <div class="fleet__img"><img src="/img/fleet-lineup.webp" srcset="/img/fleet-lineup-sm.webp 900w, /img/fleet-lineup.webp 2000w" sizes="100vw" width="2000" height="1500" alt="Templar Transport tractor units lined up" loading="lazy" /></div>
+    <div class="container fleet__in">
+      <p class="label" data-reveal>The fleet</p>
+      <p class="fleet__q" data-reveal>With a selection of modern vehicles ranging from <em>van to articulated lorry</em> no job is too big or small for us.</p>
+      <a class="btn btn--white" href="/about" data-reveal>About Templar <Icon name="arrow" /></a>
+    </div>
+  </section>
+
+  <section class="section light fam">
+    <div class="container fam__in">
+      <div class="fam__pics">
+        <div class="ph" data-reveal><img src="/img/fleet-yard.webp" width="400" height="267" alt="Templar Transport vehicles" loading="lazy" /></div>
+        <div class="ph" data-reveal><img src="/img/artic.webp" width="400" height="266" alt="Templar Transport articulated lorry" loading="lazy" /></div>
+      </div>
+      <div class="fam__copy">
+        <p class="label" data-reveal>{facts[1]}</p>
+        <h2 data-reveal>{home.h1.replace('Welcome to ', '')}</h2>
+        <p data-reveal>{about.p1}</p>
+        <p class="fam__strong" data-reveal>{about.p2}</p>
+        <a class="btn btn--navy" href="/contact" data-reveal>Get a quote <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+
+  <section class="section light cov">
+    <div class="container cov__in">
+      <div>
+        <p class="label" data-reveal>Coverage</p>
+        <h2 data-reveal>Throughout <em>the UK</em></h2>
+        <p class="lead" data-reveal>From our base in {site.address.town}, {site.address.county}, Templar Transport provides temperature controlled distribution throughout the UK.</p>
+      </div>
+      <ul class="chips" data-reveal>{areas.map((a) => <li><a class="chip" href={`/areas/${a.slug}`}><Icon name="pin" />{a.name}</a></li>)}</ul>
+    </div>
+  </section>
+
+  <Enquiry />
+</Base>
+<style>
+  .facts__in { list-style: none; margin: 0 auto; padding-block: clamp(2rem, 4vw, 3rem); display: grid; gap: 1.6rem; }
+  @media (min-width: 860px) { .facts__in { grid-template-columns: repeat(3, 1fr); } }
+  .facts li { display: grid; gap: .4rem; border-left: 3px solid var(--red); padding-left: 1.1rem; }
+  .facts b { font-family: var(--f-display); font-style: italic; font-weight: 800; font-size: var(--fs-display-3); line-height: 1; text-transform: uppercase; }
+  .facts span { color: var(--muted-d); }
+  .sh { display: grid; gap: 1rem 3rem; margin-bottom: clamp(2rem, 4vw, 3rem); align-items: end; }
+  @media (min-width: 900px) { .sh { grid-template-columns: 1.1fr 1fr; } }
+  .sh h2 { margin-top: .8rem; max-width: 16ch; }
+  .svc__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+  .svc__grid a { display: grid; gap: .7rem; align-content: start; height: 100%; padding: 1.6rem; border: 1.5px solid var(--line); border-radius: var(--radius); text-decoration: none; background: #fff; transition: border-color .3s, transform .4s var(--ease-out), box-shadow .4s; }
+  .svc__grid a:hover { border-color: var(--navy); transform: translateY(-4px); box-shadow: 0 22px 44px -22px rgba(7, 12, 36, .35); }
+  .svc__n { font-family: var(--f-display); font-weight: 800; font-style: italic; font-size: 2.6rem; color: var(--red); line-height: 1; }
+  .svc__go { display: inline-flex; gap: .4rem; align-items: center; color: var(--navy); font-weight: 700; margin-top: .4rem; }
+  .svc__go :global(svg) { width: 18px; height: 18px; }
+  .fleet { position: relative; min-height: min(80svh, 760px); display: grid; align-items: end; overflow: hidden; }
+  .fleet__img { position: absolute; inset: 0; }
+  .fleet__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+  .fleet__img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(7, 12, 36, .92) 0%, rgba(7, 12, 36, .35) 55%, rgba(7, 12, 36, .1) 100%); }
+  .fleet__in { position: relative; padding-block: 5rem; display: grid; gap: 1.2rem; justify-items: start; }
+  .fleet__q { font-family: var(--f-display); font-weight: 800; font-style: italic; text-transform: uppercase; font-size: var(--fs-display-3); line-height: 1.05; max-width: 24ch; }
+  .fleet__q em { color: #ff4a3d; }
+  .fam__in { display: grid; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+  @media (min-width: 960px) { .fam__in { grid-template-columns: 1fr 1fr; } }
+  .fam__pics { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .fam__pics .ph { aspect-ratio: 3 / 2; }
+  .fam__pics .ph:last-child { margin-top: 2.5rem; }
+  .fam__copy { display: grid; gap: 1.1rem; justify-items: start; }
+  .fam__strong { font-family: var(--f-display); font-weight: 700; font-style: italic; font-size: var(--fs-statement); line-height: 1.2; color: var(--navy); }
+  .cov__in { display: grid; gap: 2rem 4rem; }
+  @media (min-width: 960px) { .cov__in { grid-template-columns: 1fr 1fr; align-items: center; } }
+  .cov h2 { margin: .8rem 0 1.2rem; }
+  .cov .chip :global(svg) { width: 14px; height: 14px; color: var(--red); }
+</style>

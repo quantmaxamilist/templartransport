@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import InnerHero from '../components/InnerHero.astro';
+import { site } from '../data/site';
+---
+<Base title="Privacy Policy | Templar Transport" description="How Templar Transport Ltd uses the information you send us through this website.">
+  <InnerHero label="Legal" title="Privacy Policy" crumbs={[{ href: '/privacy', label: 'Privacy' }]} />
+  <section class="section light"><div class="container pv">
+    <p><b>Last updated: 13 November 2026</b></p>
+    <h2>Who we are</h2><p>{site.name}, {site.address.lines.slice(1).join(', ')}, {site.address.postcode}, is the data controller for information collected through this website. Contact: {site.email} or {site.phone}.</p>
+    <h2>What we collect</h2><p>When you use our enquiry form we collect your name, company, phone number, email address, collection and delivery locations, the services you're interested in and any details you add.</p>
+    <h2>Why we use it</h2><p>To reply to your enquiry, prepare a quote and arrange and carry out deliveries (legitimate interests and steps taken at your request before entering into a contract).</p>
+    <h2>Who we share it with</h2><p>Vercel (website hosting) and Web3Forms (delivers the form to our inbox). Some providers may process data outside the UK under appropriate safeguards. We never sell your data.</p>
+    <h2>How long we keep it</h2><p>Enquiries are kept for up to 2 years unless you become a customer, in which case we keep records for as long as needed for contractual, tax and legal purposes.</p>
+    <h2>Your rights</h2><p>You can ask to access, correct or delete your data, or object to how we use it, by contacting us. You can also complain to the Information Commissioner's Office at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
+    <h2>Cookies</h2><p>This site does not use advertising or tracking cookies.</p>
+  </div></section>
+</Base>
+<style>
+  .pv { display: grid; gap: .9rem; max-width: 760px; }
+  .pv h2 { font-size: 1.6rem; margin-top: 1rem; }
+  .pv p { color: var(--muted); }
+</style>
